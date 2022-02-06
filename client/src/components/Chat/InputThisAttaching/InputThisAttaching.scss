@@ -1,0 +1,70 @@
+.formThisInput{
+  margin-top: 20px;
+  .inputAttachContainer {
+    height: 40px;
+    background: #FDFDFD;
+    border: 1px solid rgba(150, 169, 186, 0.7);
+    box-sizing: border-box;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    .inputThisAttaching {
+      font-size: 14px;
+      height: 30px;
+      width: 80%;
+      padding: 10px;
+      border: none;
+      outline: none;
+    }
+
+    .attachButton {
+      height: 20px;
+      width: 17.5px;
+      background: url(attachment_icon.svg);
+      background-repeat: no-repeat;
+      background-position: center;
+      border: none;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 0px 15px;
+
+      &:hover{
+        background-color: rgb(245, 239, 239);
+        cursor: pointer;
+      }
+    }
+    
+    .sendButton{
+      font-family: Poppins;
+      font-size: 16px;
+      font-weight: 600;
+      color: white;
+      background: rgba(101, 135, 222, 0.65);
+      width: 108px;
+      height: 40px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      flex-direction: row-reverse;
+      justify-content: center;
+      cursor: pointer;
+      margin-left: 10px;
+
+      &::before {
+        content: url(send_icon.svg);
+        margin-left: 8px;
+      }
+
+      &:hover{
+      background: rgba(101, 135, 222, 1);
+
+      }
+
+      button {
+        display: none;
+      }
+    }
+  }
+}
