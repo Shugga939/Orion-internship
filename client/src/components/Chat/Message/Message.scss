@@ -8,38 +8,44 @@
     font-style: normal;
     font-weight: 600;
     letter-spacing: 0em;
-    // text-align: right;
     color: rgba(82, 88, 93, 1);
     margin-bottom: 5px;
   }
 
   .userMassage {
     position: relative;
-    width: 100%;
+    max-width: 100%;
     display: flex;
-    // flex-direction: row-reverse;
-    // justify-content: end;
 
     .avatar {
       position: relative;
-      min-width: 44px;
+      width: 44px;
       height: 44px;
-      margin-right: 15px;
+      padding: 0;
+      margin: 0px 15px 0px 0px; 
+      // border: 1px solid #ffffff;
+      box-sizing: border-box;
+      border-radius: 100%;
+      display: flex;
+      justify-content: center;
 
       img {
-        object-fit: cover;
-        width: 100%;
-        height: 100%;
         border-radius: 100%;
-        border: 2px solid #F3BA4A;;
+        object-fit: cover;
+        width: 44px;
+        height: 44px;
+        border: none;
       }
     }
     
     .message{
-      min-width: 200px;
+      min-width: 150px;
+      max-width: 80%;
       padding: 16px 20px 14px;
+
       .text{
-        
+        max-width: 100%;
+        word-wrap:break-word;
       }
     }
     
@@ -50,7 +56,7 @@
 
     .user {
       border-radius: 14px 0px 14px 14px;
-      background: #F3BA4A;
+      background: #facc70;
     }
 
     .time {
@@ -60,5 +66,25 @@
       text-align: right;
       color: rgba(101, 136, 222, 1);
     }
+  }
+
+  .ownerMessage {
+    flex-direction: row-reverse;
+
+    .avatar {
+      margin: 0px 0px 0px 15px; 
+    }
+  }
+
+  .ownerUserName {
+    text-align: right;
+  }
+
+  .sameSender{
+    margin: 10px 0 0 60px;
+  }
+
+  .sameSenderOwner{
+    margin: 10px 60px 0 0;
   }
 }

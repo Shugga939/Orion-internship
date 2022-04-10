@@ -1,23 +1,50 @@
+import { useContext } from 'react/cjs/react.development'
+import { Context } from '../../..'
 import './Message.scss'
 
-const Message = () => {
+const getAvatar = (messageOwner,currentUser )=> {
+  if (messageOwner) return process.env.REACT_APP_API_URL + currentUser.avatar
+  return process.env.REACT_APP_API_URL + 'defaultAvatar_single.jpg'
+}
 
-	return (
-    <div className="messageContainer">
-      <div className='userName'>Tom</div>
-      <div className='userMassage'>
-        <div className="avatar">
-        <img src="https://i.pinimg.com/736x/4e/ca/42/4eca42d6413b5f51d6d2b6698aa27ea3.jpg"></img>
-        </div>
-        <div className="message otherUser">
-          <div className='text'> I have send the files back to ya it only took me about 
-            60 mins this time was with testing too. </div>
-            <div className='imgContainer'></div>
-            <div className='time'> 15:05</div>
+
+const Message = ({message,messageOwner,date,sameSender, userId, event}) => {
+  const hours = date.getHours() < 10? `0${date.getHours()}` : date.getHours()
+  const minutes = date.getMinutes() < 10?  `0${date.getMinutes()}` : date.getMinutes()
+  // const avatar = getAvatar(messageOwner,currentUser)
+  const {members} = useContext(Context)
+  const name = {...members.roomsMembers[userId]}.name
+  const avatar = process.env.REACT_APP_API_URL + {...members.roomsMembers[userId]}.avatar
+
+  if (!sameSender && event == 'message') {
+    return (
+      <div className="messageContainer">
+        <div className={!messageOwner? 'userName' : 'userName ownerUserName'}>{name}</div>
+        <div className={!messageOwner? 'userMassage' : 'userMassage ownerMessage'}>
+          <div className="avatar">
+          <img src={avatar} alt=''></img>
+          </div>
+          <div className={messageOwner? 'message user' : 'message otherUser'}>
+            <div className='text'> {message} </div>
+              <div className='imgContainer'></div>
+              <div className='time'> {`${hours + ':' + minutes}`}</div>
+          </div>
         </div>
       </div>
-    </div>
-	)
+    )
+  } else {
+    return (
+      <div className="messageContainer">
+        <div className={!messageOwner? 'userMassage sameSender' : 'userMassage ownerMessage sameSenderOwner'}>
+          <div className={messageOwner? 'message user' : 'message otherUser'}>
+            <div className='text'> {message} </div>
+              <div className='imgContainer'></div>
+              <div className='time'> {`${hours + ':' + minutes}`}</div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 }
 
 export default Message;

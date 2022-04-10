@@ -1,0 +1,262 @@
+.roomModalBackground {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  backdrop-filter: blur(1px);
+  background-color: rgba(0, 0, 0, 0.144);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .roomModal {
+    position: relative;
+    background-color: #E3F6FC;
+    font-size: 1.1rem;
+    padding: 20px 20px;
+    height: max-content;
+    border-radius: 10px 10px 10px 10px;
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor:auto;
+  
+    .closeModalButton {
+      position: absolute;
+      right: 20px;
+      top: 10px;
+      z-index: 1;
+      height: 30px;
+      width: 30px;
+      border: none;
+      border-radius: 8px;
+      // padding: 15px;
+      // margin: 0px 10px;
+      background: none;
+
+      &:hover{
+        background-color: rgba(73, 73, 73, 0.10);
+        cursor: pointer;
+      }
+
+      &::after{
+        position: absolute;
+        bottom:  -4px;
+        left: -1px;
+        content: url(./../../../img/CloseButton_icon.svg);
+        padding-top: 1px;
+        transform: scale(0.6);
+      }
+    }    
+  
+    .roomContainer {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      width: 80%;
+
+        .avatarContainer {
+    
+          .avatar {
+            margin: 15px;
+            width: 100px;
+            height: 100px;
+            border-radius: 100%;
+          }
+        }
+    
+        .uploadPhoto {
+          color: white;
+          background-repeat: no-repeat;
+          background-position: center;
+          border: none;
+          border-radius: 8px;
+          padding: 5px 15px;
+          background: rgba(101, 135, 222, 0.65);
+    
+          &:hover{
+            background: rgba(101, 135, 222, 1);
+            cursor: pointer;
+          }
+          input {
+            display: none;
+          }
+        }
+  
+        .errorMessage {
+          color:red;
+        }
+        
+        .nameContainer {
+          margin-top: 25px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          width: 80%;
+
+          .inputContainer {
+            padding: 0px;
+            width: 50px;
+            height: 30px;
+            background: #FDFDFD;
+            border: 1px solid rgba(150, 169, 186, 0.7);
+            box-sizing: border-box;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            .inputName {
+              width: 80%;
+              font-size: 14px;
+              height: 25px;
+              padding: 10px;
+              border: none;
+              outline: none;
+              user-select: none;
+            }
+          }
+        }
+    
+        .save {
+          color: white;
+          background-repeat: no-repeat;
+          background-position: center;
+          border: none;
+          border-radius: 8px;
+          padding: 5px 15px;
+          background: rgba(74, 224, 86, 0.65);
+          margin: 30px 0px 10px 0px;
+    
+          &:hover{
+            background: rgba(74, 224, 86, 1);
+            cursor: pointer;
+          }
+        }
+      }
+    
+    .inviteContainer {
+      padding: 10px 0;
+      width: 100%;
+      border-top: 1px solid grey;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+
+      .linkContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        min-height: 50px;
+        
+        &:hover {
+          background: none;
+          cursor: pointer;
+        }
+
+        .inputContainer {
+          padding: 0px;
+          height: 150px;
+          background: #FDFDFD;
+          border: 1px solid rgba(150, 169, 186, 0.7);
+          box-sizing: border-box;
+          border-radius: 14px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .link{
+          width: 95%;
+          font-size: 14px;
+          max-height: 40px;
+          margin: 5px;
+          border: none;
+          outline: none;
+          user-select: none;
+          resize: none;
+          background: none;
+        }
+      }
+      .copyButton {
+        color: white;
+        background-repeat: no-repeat;
+        background-position: center;
+        border: none;
+        border-radius: 8px;
+        padding: 5px 15px;
+        background: rgba(101, 135, 222, 0.65);
+        margin-top: 5px;
+  
+        &:hover{
+          background: rgba(101, 135, 222, 1);
+          cursor: pointer;
+        }
+      }
+      .complete {
+        background: rgba(74, 224, 86, 0.75);
+
+        &:hover{
+          background: rgba(74, 224, 86, 1);
+        }
+      }
+    }  
+
+    .media {
+      margin: 10px 0;
+      padding: 10px 0;
+      width: 100%;
+      border-top: 1px solid grey;
+      border-bottom: 1px solid grey;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+
+      .photos {
+        color: white;
+        background-repeat: no-repeat;
+        background-position: center;
+        border: none;
+        border-radius: 8px;
+        padding: 5px 15px;
+        background: rgba(101, 135, 222, 0.65);
+        margin: 15px 0;
+  
+        &:hover{
+          background: rgba(101, 135, 222, 1);
+          cursor: pointer;
+      }
+    } 
+  }
+
+    .leaveRoom {
+      color: white;
+      background-repeat: no-repeat;
+      background-position: center;
+      border: none;
+      border-radius: 8px;
+      padding: 5px 15px;
+      background: rgba(240, 52, 52, 0.5);
+      margin-top: 10px;
+      margin-bottom: 20px;
+
+      &:hover{
+        background: rgb(240, 52, 52);
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+
+.hide {
+  display: none;
+}

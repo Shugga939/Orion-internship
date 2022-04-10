@@ -1,11 +1,11 @@
 import './DateReference.scss'
 
-const DateReference = () => {
+const DateReference = ({date}) => {
 
 	return (
-			<div className="DateReference"> 
-
-			</div>
+		<div className="dateReference"> 
+			{date}
+		</div>
 	)
 }
 

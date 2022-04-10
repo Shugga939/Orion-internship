@@ -1,0 +1,79 @@
+.modalMessageBackground {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  backdrop-filter: blur(1px);
+  z-index: 101;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .modalMessageContainer {
+    position: absolute;
+    background-color: #E3F6FC;
+    font-size: 1.1rem;
+    padding: 20px 20px;
+    height: max-content;
+    border-radius: 10px;
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid grey;
+  
+    .closeMessageButton {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      z-index: 1;
+      height: 30px;
+      width: 30px;
+      border: none;
+      border-radius: 8px;
+      background: none;
+
+      &:hover{
+        background-color: rgba(73, 73, 73, 0.10);
+        cursor: pointer;
+      }
+
+      &::after{
+        position: absolute;
+        bottom:  -4px;
+        left: -1px;
+        content: url(./../../img/CloseButton_icon.svg);
+        padding-top: 1px;
+        transform: scale(0.6);
+      }
+    }      
+    
+    .message {
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+
+    .buttonsContainer {
+      display: flex;
+      width: 150px;
+      justify-content: space-around;
+      align-items: center;
+      flex-direction: row;
+      margin-top: 15px;
+      
+      button {
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 20px;
+        background: rgba(101, 135, 222, 0.65);
+
+        &:hover{
+        background: rgba(101, 135, 222, 1);
+        cursor: pointer;
+        }
+      }
+    }
+  }
+}
+  

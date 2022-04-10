@@ -1,0 +1,20 @@
+.buttonContainer {
+  margin-top: 20px;
+  .submitFormButton {
+    height: 50px;
+    border: 2px solid;
+    background: #2691d9;
+    border-radius: 25px;
+    font-size: 18px;
+    color: #e9f4fb;
+    font-weight: 700;
+    cursor: pointer;
+    outline: none;
+    padding: 5px 30px;
+
+    &:hover {
+      border-color: #2691d9;
+      transition: .5s;
+    }
+  }
+}

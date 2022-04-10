@@ -1,0 +1,183 @@
+.createChatRoom {
+  background-color: #E3F6FC;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 5px;
+
+  .createRoomButton {
+    color: #fff;
+    background: rgba(101, 135, 222, 0.75);
+    box-sizing: border-box;
+    // background: none;
+    border: none;
+    padding: 15px;
+    width: 98%;
+    // width: 100%;
+    border-radius: 10px;
+
+    &:hover {
+      cursor: pointer;
+     background: rgba(101, 135, 222, 1);
+
+    }
+  }
+}
+  .createRoomModalBackground {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    backdrop-filter: blur(1px);
+    background-color: rgba(0, 0, 0, 0.144);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+    
+    .createRoomModal {
+      position: absolute;
+      left: 350px;
+      bottom: 0px;
+      background-color: #E3F6FC;
+      font-size: 1.1rem;
+      padding: 20px 20px;
+      height: max-content;
+      border-radius: 10px 10px 0 0;
+      width: 320px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    
+        &::after{
+        content: '';
+        position: absolute;
+        bottom: 70px;
+        right: 320px;
+        width: 0; 
+        height: 0; 
+        border-top: 15px solid transparent;
+        border-bottom: 15px solid transparent;
+        border-right: 15px solid #E3F6FC;
+      }
+      .closeModalButton {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        z-index: 1;
+        height: 30px;
+        width: 30px;
+        border: none;
+        border-radius: 8px;
+        background: none;
+  
+        &:hover{
+          background-color: rgba(73, 73, 73, 0.10);
+          cursor: pointer;
+        }
+  
+        &::after{
+          position: absolute;
+          bottom:  -4px;
+          left: -1px;
+          content: url(./../../img/CloseButton_icon.svg);
+          padding-top: 1px;
+          transform: scale(0.6);
+        }
+      }      
+    
+      .createRoomContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    
+        .emailContainer {
+          font-size: 1.4rem;
+          font-weight: bold;
+        }
+        .avatarContainer {
+    
+          .avatar {
+            margin: 20px;
+            width: 100px;
+            height: 100px;
+            border-radius: 100%;
+          }
+        }
+    
+        .uploadPhoto {
+          color: white;
+          background-repeat: no-repeat;
+          background-position: center;
+          border: none;
+          border-radius: 8px;
+          padding: 5px 15px;
+          background: rgba(101, 135, 222, 0.65);
+    
+          &:hover{
+            background: rgba(101, 135, 222, 1);
+            cursor: pointer;
+          }
+          input {
+            display: none;
+          }
+        }
+  
+        .errorMessage {
+          color:red;
+        }
+        
+        .nameContainer {
+          margin-top: 45px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          
+          .inputContainer {
+            height: 30px;
+            background: #FDFDFD;
+            border: 1px solid rgba(150, 169, 186, 0.7);
+            box-sizing: border-box;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            .inputName {
+              font-size: 14px;
+              height: 25px;
+              width: 90%;
+              padding: 10px;
+              border: none;
+              outline: none;
+              user-select: none;
+            }
+          }
+        }
+    
+        .save {
+          color: white;
+          background-repeat: no-repeat;
+          background-position: center;
+          border: none;
+          border-radius: 8px;
+          padding: 5px 15px;
+          background: rgba(74, 224, 86, 0.65);
+          margin: 20px 0px;
+    
+          &:hover{
+            background: rgba(74, 224, 86, 1);
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+  
+  
+  .hide {
+    display: none;
+  }
+  
