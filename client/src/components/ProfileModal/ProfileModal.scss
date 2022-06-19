@@ -84,12 +84,12 @@
         border: none;
         border-radius: 8px;
         padding: 5px 15px;
-        background: rgba(101, 135, 222, 0.65);
+        background: rgba(240, 52, 52, 0.5);
         margin-top: 10px;
         margin-bottom: 20px;
   
         &:hover{
-          background: rgba(101, 135, 222, 1);
+          background: rgb(240, 52, 52);
           cursor: pointer;
         }
       }

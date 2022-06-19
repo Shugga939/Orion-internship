@@ -10,6 +10,7 @@ import { observer } from 'mobx-react-lite';
 import { Context } from '../../..';
 import { useContext } from 'react/cjs/react.development';
 import RoomBar from '../RoomBar/RoomBar';
+import LoaderRow from '../../ui/Loader/LoaderRow';
 
 
 const findRoomsIndex = (roomsList, roomId)=> {
@@ -24,6 +25,7 @@ const ChatBoard = observer(({
     messages,
     roomsList,
     socket,
+    loading
   }) => {
   const {user} = useContext(Context)
   const currentUser = {...user.currentUser}
@@ -73,50 +75,56 @@ const ChatBoard = observer(({
           currentRoomId={roomId}
         />
       </div>
-      <div className="messagesContainer">
-        {messages.map((message,index)=>{  // todo use memo
-          const messageDate = new Date(message.time)
-          let nextMessageDate
-          let nextMessageUserId
-          if (index!== messages.length-1) {
-            nextMessageDate = new Date(messages[index+1].time)
-            nextMessageUserId = messages[index+1].userId
-          } else {
-            nextMessageDate = new Date(messages[index].time)
-            nextMessageUserId = messages[index].userId
-          }
-          const formattedDate = formatteDate(messageDate)
+      {!loading? 
+        <div className="messagesContainer">
+          {messages.map((message,index)=>{  // todo use memo
+            const messageDate = new Date(message.time)
+            let nextMessageDate
+            let nextMessageUserId
+            if (index!== messages.length-1) {
+              nextMessageDate = new Date(messages[index+1].time)
+              nextMessageUserId = messages[index+1].userId
+            } else {
+              nextMessageDate = new Date(messages[index].time)
+              nextMessageUserId = messages[index].userId
+            }
+            const formattedDate = formatteDate(messageDate)
 
-          if (formattedDate===formatteDate(nextMessageDate) && index!==messages.length-1) {
-            return <Message 
-            message={message.message}   
-            event={message.event}   
-            key={message.time}
-            date={messageDate}
-            messageOwner={message.userId===currentUser.id}
-            sameSender={message.userId===nextMessageUserId}
-            userId={message.userId}
-            />
-          } else {
-            return (
-              <div className='withDate' key={message.time}>
-                <div className="dateContainer">
-                  <DateReference date={formattedDate}/>
+            if (formattedDate===formatteDate(nextMessageDate) && index!==messages.length-1) {
+              return <Message 
+              message={message.message}   
+              event={message.event}   
+              key={message.time}
+              date={messageDate}
+              messageOwner={message.userId===currentUser.id}
+              sameSender={message.userId===nextMessageUserId}
+              userId={message.userId}
+              />
+            } else {
+              return (
+                <div className='withDate' key={message.time}>
+                  <div className="dateContainer">
+                    <DateReference date={formattedDate}/>
+                  </div>
+                  <Message 
+                    message={message.message} 
+                    event={message.event}   
+                    date={messageDate}
+                    messageOwner={message.userId===currentUser.id}
+                    sameSender={false}
+                    userId={message.userId}
+                  />
                 </div>
-                <Message 
-                  message={message.message} 
-                  event={message.event}   
-                  date={messageDate}
-                  messageOwner={message.userId===currentUser.id}
-                  sameSender={false}
-                  userId={message.userId}
-                />
-              </div>
-            )
+              )
+            }
           }
-        }
-        )}
-      </div>
+          )}
+        </div>
+      :
+        <div className="loaderContainer">
+          <LoaderRow/>
+        </div>
+      }
       <div className="inputContainer">
         <InputThisAttaching 
           submitCallback={sendMessage}

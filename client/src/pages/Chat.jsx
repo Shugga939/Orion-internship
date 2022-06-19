@@ -18,17 +18,22 @@ const Chat = observer(()=> {
   const [messages, setMessages] = useState([]);
   const [roomsList, setRoomsList] = useState([]);
   const previousId = useRef('')
+  const [loadingContacts, setLoadingContacts]= useState(false)
+  const [loadingMessages, setLoadingMessages]= useState(false)
+
 
   async function getMessagesOfRooom () {    /// todo hhtp 
+    setLoadingMessages(true)
     let resp = await fetch(`http://localhost:5000/chat/${room.id}`)
     if (resp.ok) {
       setMessages(await resp.json())
     } else {
       console.log(resp.status)
     }
+    setLoadingMessages(false)
   }
 
-  async function getUsersOfRoom () {    /// todo hhtp 
+  async function getUsersOfRoom () {    /// todo hhtp
     let resp = await fetch(`http://localhost:5000/chat/${room.id}/getUsers`)
     if (resp.ok) {
       const users = await resp.json()
@@ -37,9 +42,11 @@ const Chat = observer(()=> {
     } else {
       console.log(resp.status)
     }
+
   }
 
   async function getAllowedRoomsWhitLastMessage() {
+    setLoadingContacts(true)
     let resp = await fetch(`http://localhost:5000/chat/`, {
       headers : {
         lastMessages : true
@@ -50,26 +57,9 @@ const Chat = observer(()=> {
     } else {
       console.log(resp.status)
     }
+    setLoadingContacts(false)
   }
   
-  // async function saveTimeOfLastReadingMessage(messages, roomId) {  // delete
-  //   let time = Date.now()
-  //   messages[0]? time = messages[0].time : time = Date.now()
-  //   if (roomId == '') { 
-  //     previousId.current = room.id
-  //   } else {
-  //   let resp = await fetch(`http://localhost:5000/user/change`, {
-  //     method: 'PUT',
-  //     headers: {'Content-Type': 'application/json', 'update': 'readMessage'},
-  //     body: JSON.stringify({time, roomId})
-  //   })
-  //   if (resp.ok) {
-  //     await resp.json()  //{message: 'success'}
-  //   } else {
-  //     console.log(resp.status)
-  //   }
-  // }}
-
   async function saveTimeOfLastReadingMessage(messages) {
     let time = Date.now()
     messages[0]? time = messages[0].time : time = Date.now()
@@ -103,25 +93,6 @@ const Chat = observer(()=> {
     }
   }
 
-
-
-  // async function saveTimeOfLastReadingMessageAtQuit(roomId) {  // delete
-    
-  //   let time = Date.now()
-  //   let resp = await fetch(`http://localhost:5000/user/change`, {
-  //     method: 'PUT',
-  //     headers: {'Content-Type': 'application/json', 'update': 'readMessage'},
-  //     body: JSON.stringify({time, roomId})
-  //   })
-  //   if (resp.ok) {
-  //     await resp.json()  //{message: 'success'}
-  //   } else {
-  //     console.log(resp.status)
-  //   }
-  // }
-
-
-
   useEffect(()=>{
 
     getAllowedRoomsWhitLastMessage()
@@ -154,7 +125,6 @@ const Chat = observer(()=> {
         await getMessagesOfRooom()
       })()
     }
-
   },[room.id])
 
   return (
@@ -169,6 +139,7 @@ const Chat = observer(()=> {
           callbackForSaveTimeAtQuit ={saveTimeOfLastReadingMessageAtQuit}
           previous={previousId.current}
           roomsList={roomsList}
+          loading={loadingMessages}
         /> 
       : 
         <MainChatBoard />
@@ -179,6 +150,7 @@ const Chat = observer(()=> {
         roomsList={roomsList}
         setRoomsList={setRoomsList}
         callbackForSaveTimeAtQuit ={saveTimeOfLastReadingMessageAtQuit}
+        loading={loadingContacts}
       />
     </div>
   );

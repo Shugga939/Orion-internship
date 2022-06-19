@@ -7,13 +7,15 @@ import { useContext, useEffect, useState } from "react/cjs/react.development";
 import CreateChatRoom from "../CreateChatRoom/CreateChatRoom";
 import { observer } from "mobx-react-lite";
 import { Context } from "../..";
+import LoaderCircle from "../ui/Loader/LoaderCircle";
 
 const ContactList = observer(({
 	roomId, 
 	lastSentMessage, 
 	roomsList, 
 	setRoomsList,
-	callbackForSaveTimeAtQuit
+	callbackForSaveTimeAtQuit,
+	loading
 }) => {
 
 	const {user} = useContext(Context)
@@ -76,30 +78,42 @@ const ContactList = observer(({
 				setShow={setShowProfile}
 				callbackForSaveTimeAtQuit = {callbackForSaveTimeAtQuit}
 			/>
-			<div className="profile">
-				<div className="avatar">
-					<img src={process.env.REACT_APP_API_URL + {...user.currentUser}.avatar} alt='Photo'></img>
+			{!loading? 
+				<div className="profile">
+					<div className="avatar">
+						<img src={process.env.REACT_APP_API_URL + {...user.currentUser}.avatar} alt='Photo'></img>
+					</div>
+					<div className="name"> {{...user.currentUser}.name} </div>
+					<button className="settings" onClick={openProfile}/>
+				</div> 
+			:
+				<div className="profile">
+					<LoaderCircle/>
 				</div>
-				<div className="name"> {{...user.currentUser}.name} </div>
-				<button className="settings" onClick={openProfile}/>
-			</div>
-			<div className="contactList">
-				{arrayOfRooms.map(room=> 
-					<ContactLink
-						id={room.id} 
-						key={room.id}
-						avatar={room.image} 
-						currentId={roomId} 
-						name={room.name}
-						lastMessage={room.messageText}
-						dateOfLastMessage={room.date}
-						sender={room.sender}
-						lastSentMessage={lastSentMessage}
-						currentUserId={{...user.currentUser}.userId}
-						dateOfLastReadMessage ={datesOfLastReadMessages[room.id]}
-					/>
-				)} 
-			</div>
+			}
+			{!loading? 
+				<div className="contactList">
+					{arrayOfRooms.map(room=> 
+						<ContactLink
+							id={room.id} 
+							key={room.id}
+							avatar={room.image} 
+							currentId={roomId} 
+							name={room.name}
+							lastMessage={room.messageText}
+							dateOfLastMessage={room.date}
+							sender={room.sender}
+							lastSentMessage={lastSentMessage}
+							currentUserId={{...user.currentUser}.userId}
+							dateOfLastReadMessage ={datesOfLastReadMessages[room.id]}
+						/>
+					)} 
+				</div>
+			:
+				<div className="contactList">
+					<LoaderCircle/>
+				</div>
+			}
 			<CreateChatRoom setRoomsList={setRoomsList}/>
 			<div className="lowerToolBar">
 				<div className="buttons-icons">
