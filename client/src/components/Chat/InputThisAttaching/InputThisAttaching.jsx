@@ -1,17 +1,23 @@
+import { useState } from 'react/cjs/react.development';
+import FilePanel from '../FilePanel/FilePanel';
 import './InputThisAttaching.scss'
 
 
-const InputThisAttaching = ({value, setValue,submitCallback,reference}) => {
+const InputThisAttaching = ({submitCallback, reference}) => {
+  const [show, setShow] = useState(false);
+
+  const toggleFilePanel = ()=> {
+    setShow(!show)
+  }
 
 	return (
     <form className="formThisInput">
+      <FilePanel show={show} setShow={setShow}/>
       <div className="inputAttachContainer">
         <label className="attachButton">
-          <button type='button'></button>
+          <button type='button' onClick={toggleFilePanel}> </button>
         </label>
         <input
-          // value = {value} 
-          // onChange = {event=> setValue(event.target.value)}
           ref={reference}
           type="text"
           autoComplete='off' 

@@ -1,0 +1,106 @@
+.filePanel {
+  position: absolute;
+  bottom: 60px;
+  background: #6588DE;
+  box-shadow: 0px 8px 40px rgba(0, 72, 251, 0.3);
+  font-size: 1.1rem;
+  padding: 20px 20px;
+  height: 132px;
+  width: 100%;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  animation-name: open;
+  animation-duration: 0.3s;
+
+    &::after{
+    content: '';
+    position: absolute;
+    top: 125px;
+    left: 15px;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 20px solid #6588DE;
+  }
+
+  .filePanelContainer {
+    display: flex;
+    width: 100%;
+    padding: 10px 0;
+
+    .fileContainer{
+      height: 90px;
+      width: 90px;
+      margin: 0 10px;
+
+      .uploadedFile {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        .fileImg {
+          height: 70px;
+          width: 70px;
+          align-self: center;
+          background-image: url('./File.svg');
+        }
+
+        .text {
+          font-family: Poppins;
+          font-size: 14px;
+          font-weight: 400;
+          text-align: center;
+          color: #F9FBFB;
+          margin-top: 5px;
+
+        }
+      }
+    
+      .addFile {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        .square {
+          cursor: pointer;
+          height: 70px;
+          width: 70px;
+          border: 1px dashed #F9FBFB;
+          border-radius: 8px;
+          align-self: center;
+
+          &::before {
+            height: 100%;
+            content: url('./Circle.svg');
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+        }
+
+        .text {
+          font-family: Poppins;
+          font-size: 14px;
+          font-weight: 400;
+          text-align: center;
+          color: #F9FBFB;
+          margin-top: 5px;
+
+        }
+
+        input {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+@keyframes open {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

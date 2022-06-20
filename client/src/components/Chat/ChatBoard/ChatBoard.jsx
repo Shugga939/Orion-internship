@@ -1,7 +1,6 @@
 import React from 'react'
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import DateReference from '../../ui/DateReference/DateReference';
-import Switcher from '../../ui/Switcher/Switcher';
 import InputThisAttaching from '../InputThisAttaching/InputThisAttaching';
 import Message from '../Message/Message';
 import './ChatBoard.scss'
@@ -21,7 +20,6 @@ const ChatBoard = observer(({
     roomId, 
     callbackForSaveTime, 
     callbackForSaveTimeAtQuit,
-    previous,  //todo delete
     messages,
     roomsList,
     socket,
@@ -30,7 +28,6 @@ const ChatBoard = observer(({
   const {user} = useContext(Context)
   const currentUser = {...user.currentUser}
   const inputRef = useRef('')
-  const previousId = useRef('')
 
   useEffect(()=> {
       // callbackForSaveTime(messages, previousId.current)  // delete
