@@ -26,6 +26,7 @@ const ContactList = observer(({
 	let [showProfile, setShowProfile] = useState(false)
 	const serachInputRef = useRef(null)
 	let arrayOfRooms = useMemoRooms(roomsList,searchValue)
+
 	useEffect (()=> {
 		if (serachActive) serachInputRef.current.focus()
 	},[serachActive])

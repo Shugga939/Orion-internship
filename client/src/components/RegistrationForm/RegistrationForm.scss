@@ -10,6 +10,7 @@
     text-align: center;
     font-size: 1.5rem;
     padding-bottom: 15px;
+    margin-bottom: 15px;
     border-bottom: 1px solid silver;
   }
 
@@ -18,6 +19,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    .txt_field {
+      margin: 5px 0;
+    }
 
     .error-message {
       font-size: 0.9rem;

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router";
+import { useParams } from "react-router";
 import { useContext, useRef } from "react";
+import { Navigate, useNavigate} from "react-router-dom";
 import ChatBoard from "../components/Chat/ChatBoard/ChatBoard";
 import MainChatBoard from "../components/Chat/MainChatBoard/MainChatBoard";
 import ContactList from "../components/ContactList/ContactList";
@@ -20,11 +21,16 @@ const Chat = observer(()=> {
   const previousId = useRef('')
   const [loadingContacts, setLoadingContacts]= useState(false)
   const [loadingMessages, setLoadingMessages]= useState(false)
+  const navigate = useNavigate()
+
+  
+  if (!user.isAuth) {return <Navigate to='/user/login'/>}
 
 
   async function getMessagesOfRooom () {    /// todo hhtp 
     setLoadingMessages(true)
     let resp = await fetch(`http://localhost:5000/chat/${room.id}`)
+
     if (resp.ok) {
       setMessages(await resp.json())
     } else {
@@ -53,7 +59,8 @@ const Chat = observer(()=> {
       }
     })
     if (resp.ok) {
-      setRoomsList(await resp.json())
+      const respJson = await resp.json()
+      setRoomsList(respJson)
     } else {
       console.log(resp.status)
     }
@@ -93,33 +100,33 @@ const Chat = observer(()=> {
     }
   }
 
-  useEffect(()=>{
+  useEffect( ()=>{
 
-    getAllowedRoomsWhitLastMessage()
-    socket.current = new WebSocket(`ws://localhost:5000/chat/`)
-
-    socket.current.onclose = () => {
-      console.log('close')
-    }
-
-    socket.current.onopen = () => {
-      console.log('open')
-    }
-
+      getAllowedRoomsWhitLastMessage()
+      socket.current = new WebSocket(`ws://localhost:5000/chat/`)
+  
+      socket.current.onclose = () => {
+        console.log('close')
+      }
+  
+      socket.current.onopen = () => {
+        console.log('Websocket is open')
+      }
   },[])
 
   
   useEffect(()=>{
     previousId.current = room.id
-    socket.current.onmessage = (event) => {
-      const message = JSON.parse(event.data)
-      setLastMessage(message)
-      if (message.roomId === room.id) {
-        console.log('Enter')
-        setMessages(prev => [message, ...prev])
-      }
-    }
+
     if (room.id != '' && room.id != 'main' && room.id != undefined ) {
+      socket.current.onmessage = (event) => {
+        const message = JSON.parse(event.data)
+        setLastMessage(message)
+        if (message.roomId === room.id) {
+          console.log('Enter')
+          setMessages(prev => [message, ...prev])
+        }
+      }
       (async()=> {
         await getUsersOfRoom()
         await getMessagesOfRooom()

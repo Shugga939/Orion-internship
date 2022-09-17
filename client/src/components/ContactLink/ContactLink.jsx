@@ -1,7 +1,7 @@
 import './ContactLink.scss'
 import {Link, NavLink} from 'react-router-dom'
 import { useEffect, useState } from 'react/cjs/react.development'
-import {formatteDate} from '../../helpers/formatteDates'
+import formatteDate from '../../utils/helpers/formatteDates'
 
 
 const ChatLink = ({

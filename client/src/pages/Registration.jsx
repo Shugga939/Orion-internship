@@ -1,7 +1,7 @@
 import RegistrationForm from "../components/RegistrationForm/RegistrationForm";
 import './Pages.scss'
 
-function Registration() {
+const Registration = ()=> {
 
   return (
     <div className = 'registrationPage'>

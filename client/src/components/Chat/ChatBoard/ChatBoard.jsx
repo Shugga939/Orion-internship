@@ -4,7 +4,7 @@ import DateReference from '../../ui/DateReference/DateReference';
 import InputThisAttaching from '../InputThisAttaching/InputThisAttaching';
 import Message from '../Message/Message';
 import './ChatBoard.scss'
-import {formatteDate} from '../../../helpers/formatteDates'
+import formatteDate from '../../../utils/helpers/formatteDates'
 import { observer } from 'mobx-react-lite';
 import { Context } from '../../..';
 import { useContext } from 'react/cjs/react.development';
@@ -13,7 +13,7 @@ import LoaderRow from '../../ui/Loader/LoaderRow';
 
 
 const findRoomsIndex = (roomsList, roomId)=> {
-  return roomsList.findIndex((room)=> room.id == roomId) 
+  return roomsList.findIndex((room)=> room.id === roomId) 
 }
 
 const ChatBoard = observer(({

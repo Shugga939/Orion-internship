@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import {formatteDate} from '../helpers/formatteDates'
+import formatteDate from '../utils/helpers/formatteDates'
 
 export const useMemoRooms = (rooms,searchValue)=> {
   let sortedRooms = useSortRooms(rooms)

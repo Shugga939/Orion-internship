@@ -18,12 +18,12 @@ const RoomBar = ({currentRoomId, currentRoom}) => {
     <div className="roomBar" onClick={openRoomModal}>
       <RoomModal
         currentRoomId = {currentRoomId}
-        roomsImage = {currentRoom.image}
-        roomsName = {currentRoom.name}
+        roomsImage = {currentRoom?.image}
+        roomsName = {currentRoom?.name}
         show = {showRoomModal}
         setShowRoomModal = {setShowRoomModal}
       />
-      <div className="name" >{currentRoom.name}</div>
+      <div className="name" >{currentRoom?.name}</div>
       <div className="members" > {{...members.membersCount}[currentRoomId]} members </div>
     </div>
   )

@@ -1,121 +1,101 @@
 import './LoginForm.scss'
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import FormInput from "../FormInput/FormInput";
 import SubmitFormButton from '../ui/SubmitFormButton/SubmitFormButton';
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react/cjs/react.development';
 import { Context } from '../..';
 import { userLogin } from '../../http/userAPI';
-import jwt_docode from 'jwt-decode'
+import validateEmail from '../../utils/helpers/validateEmail'
 
-
-function validateEmail(value) {
-  const EMAIL_REGEXP = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
-  return !EMAIL_REGEXP.test(value);
-}
 
 const LoginForm = observer(() => {
-  const {user} = useContext(Context)
-  const defaultValues = {Email: '', pass: ''}
-  let [regForm, setRegForm] = useState (defaultValues)
-  let [wrongValue, setWrongValue] = useState ({Email:false, pass: false})
-  let [errorAuth, setErrorAuth] = useState (false)
-  let [errorMasage, setErrorMessage] = useState ({
-    Email: 'The field must be not empty', 
+  const { user } = useContext(Context)
+  const defaultValues = { email: '', pass: '' }
+  const [regForm, setRegForm] = useState(defaultValues)
+  const [wrongValue, setWrongValue] = useState({ email: false, pass: false })
+  const [errorAuth, setErrorAuth] = useState(false)
+  const [errorMasage, setErrorMessage] = useState({
+    email: 'The field must be not empty',
     pass: 'The field must be not empty',
   })
-  let [validForm, setValidForm] = useState (true)
+  const [isValidForm, setIsValidForm] = useState(true)
+  let isInvalidEmail = wrongValue.email && errorMasage.email
+  let isInvalidPassword = wrongValue.pass && errorMasage.pass
 
+  useEffect(() => {
+    (errorMasage.email || errorMasage.pass)? setIsValidForm(false) : setIsValidForm(true)
+  }, [errorMasage])
 
-  useEffect(()=> {
-    if ( !errorMasage.Email && !errorMasage.pass) {
-      setValidForm(true)
-    } else {
-      setValidForm(false)
-    }
-  },[errorMasage])
-
-  useEffect(()=> {
-  //   const userAuth  
-  //   if (userAuth) { 
-  //     Navigate('/home')
-  //   } else {        // error logics
-  //     setErrorAuth(true)
-  //   } 
-  })
-
-  let login = (event)=> {
+  const login = async (event) => {
     event.preventDefault()
-    if (!regForm.Email) {
+    if (!regForm.email) {
       blurInput('email')
     } else if (!regForm.pass) {
       blurInput('password')
-    } 
-    if (regForm.Email && regForm.pass && validForm) {
-      (async function auth () {
-        try {
-          let data = await userLogin({email: regForm.Email, password: regForm.pass})
-          user.setIsAuth(true)
-          const {email, name, id} = jwt_docode(data.data.token)
-          const lastReadMessage = data.data.lastReadMessage
-          const avatar = data.data.avatar
-          user.setUser({email, name, id, lastReadMessage, avatar})
-        } catch (e) {
-          console.log(e.response.data.message)
-          setErrorAuth(true)
-        } 
-      })()
+    }
+    if (isValidForm) {
+      try {
+        const data = await userLogin({ email: regForm.email, password: regForm.pass })
+        user.userLogin(data.data)
+      } catch (e) {
+        console.log(e);
+        // console.log(e.response.data.message)
+        setErrorAuth(true)
+      }
     }
   }
 
-  let editEmail = (val)=> {
-    setRegForm({...regForm, Email: val})
+  const editEmail = (val) => {
+    setRegForm({ ...regForm, email: val })
     if (validateEmail(val)) {
-      setErrorMessage({...errorMasage, Email:'Invalid Email'})
+      setErrorMessage({ ...errorMasage, email: 'Invalid Email' })
     } else {
-      setErrorMessage({...errorMasage, Email:''})
+      setErrorMessage({ ...errorMasage, email: '' })
     }
   }
 
-  let editPass = (val)=>  {
-    setRegForm({...regForm, pass: val})
-    const validPassLength = (val.length>=6 && val.length<15) 
+  let editPass = (val) => {
+    setRegForm({ ...regForm, pass: val })
+    const validPassLength = (val.length >= 6 && val.length < 15)
 
-    if (!validPassLength ) {
-      setErrorMessage({...errorMasage, pass:'The password must be between 6 and 15 symbols'})
-    } else  {
-      setErrorMessage({...errorMasage, pass:'', repPass:''})
-    } 
+    if (validPassLength) {
+      setErrorMessage({ ...errorMasage, pass: '', repPass: '' })
+    } else {
+      setErrorMessage({ ...errorMasage, pass: 'The password must be between 6 and 15 symbols' })
+    }
   }
 
-  let blurInput = (inputName)=> {
+  const blurInput = (inputName) => {
     switch (inputName) {
-      case 'email' : {
-        setWrongValue({...wrongValue, Email: true})
+      case 'email': {
+        setWrongValue({ ...wrongValue, email: true })
         break;
       }
-      case 'password' : {
-        setWrongValue({...wrongValue, pass: true})
+      case 'password': {
+        setWrongValue({ ...wrongValue, pass: true })
         break;
       }
-      default : break;
+      default: break;
     }
   }
 
   return (
     <div className='loginContainer'>
-      <form className = 'loginForm'>
+      <form className='loginForm'>
         <h1>Sign In</h1>
-        <FormInput className = 'email-input' name = {'email'} blur = {blurInput} value={regForm.Email} changeValue = {editEmail} title = 'E-mail'/>
-        {(wrongValue.Email && errorMasage.Email) && <div className = 'error-message'>{errorMasage.Email}</div>}
-        <FormInput className = 'password-input' name = {'password'} type = {'password'} blur = {blurInput} changeValue = {editPass} value={regForm.pass} title = 'Password'/>
-        {(wrongValue.pass && errorMasage.pass) && <div className = 'error-message'> {errorMasage.pass}</div>}
-        <SubmitFormButton title={'Login'} callback={login}/>
-        {errorAuth && <div className = 'error-message'> {'Invalid Email or Password'}</div>}
-        <div className = 'note-login'>
-          {"Don't have an account? "} 
-          <Link to={'/user/registration'} className = 'link_reg'> {'Registration'} </Link>
+        <FormInput className='email-input' name={'email'} blur={blurInput} value={regForm.email} changeValue={editEmail} title='E-mail' />
+        {isInvalidEmail && <div className='error-message'>{errorMasage.email}</div>}
+        <FormInput className='password-input' name={'password'} type={'password'} blur={blurInput} changeValue={editPass} value={regForm.pass} title='Password' />
+        {isInvalidPassword && <div className='error-message'> {errorMasage.pass}</div>}
+        <SubmitFormButton title={'Login'} callback={login} />
+        {errorAuth && <div className='error-message'> {'Invalid Email or Password'}</div>}
+        <div className='note-login'>
+          <span> 
+            {"Don't have an account? "}
+            <Link to={'/user/registration'} className='link_reg'>Registration</Link>
+          </span>
         </div>
       </form>
     </div>
