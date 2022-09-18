@@ -162,8 +162,8 @@ const RegistrationForm = observer(()=> {
 
         <div className = 'note-login'>
           <span>
-            Have an account?
-            <Link to={'/user/login'} className = 'link_reg'> {'Sign In'} </Link>
+            {"Have an account? "}
+            <Link to={'/user/login'} className = 'link_reg'>Sign In</Link>
           </span>
         </div>
       </form>

@@ -1,4 +1,4 @@
-import {$host} from './../http/index.js'
+import {$host} from './index.js'
 
 export const userRegistration = async (user)=> {
   const response = await $host.post('user/registration', user)

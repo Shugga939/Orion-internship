@@ -40,8 +40,7 @@ const LoginForm = observer(() => {
         const data = await userLogin({ email: regForm.email, password: regForm.pass })
         user.userLogin(data.data)
       } catch (e) {
-        console.log(e);
-        // console.log(e.response.data.message)
+        console.log(e.response.data.message)
         setErrorAuth(true)
       }
     }

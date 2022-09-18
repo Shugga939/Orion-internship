@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useRef } from 'react/cjs/react.development';
+import { useRef } from 'react';
 import './FilePanel.scss'
 
 
@@ -21,7 +21,6 @@ const FilePanel = ({show}) => {
             <div className="uploadedFile">
               <div className="fileImg"></div>
               <div className="text">{el[0].name}</div>
-              
             </div>
         </div>
         )

@@ -1,5 +1,4 @@
-import React from 'react'
-import { useRef, useEffect } from 'react';
+import { useContext, useRef, useEffect } from 'react'
 import DateReference from '../../ui/DateReference/DateReference';
 import InputThisAttaching from '../InputThisAttaching/InputThisAttaching';
 import Message from '../Message/Message';
@@ -7,7 +6,6 @@ import './ChatBoard.scss'
 import formatteDate from '../../../utils/helpers/formatteDates'
 import { observer } from 'mobx-react-lite';
 import { Context } from '../../..';
-import { useContext } from 'react/cjs/react.development';
 import RoomBar from '../RoomBar/RoomBar';
 import LoaderRow from '../../ui/Loader/LoaderRow';
 
@@ -26,26 +24,27 @@ const ChatBoard = observer(({
     loading
   }) => {
   const {user} = useContext(Context)
-  const currentUser = {...user.currentUser}
+  const currentUser = user.currentUser
   const inputRef = useRef('')
 
   useEffect(()=> {
-      // callbackForSaveTime(messages, previousId.current)  // delete
+
       (async()=> await callbackForSaveTime(messages))()
 
-      // previousId.current = roomId
-      // previous = roomId
 
-  },[roomId])
+  },[roomId, ])
 
 
   useEffect(()=> {
-    window.addEventListener('beforeunload', async ()=> {
-      // await callbackForSaveTimeAtQuit(previousId.current)  // delete
+    async function saveChanges () {
       await callbackForSaveTimeAtQuit()
+    } 
+    window.addEventListener('beforeunload', saveChanges);
 
-    });
-  },[])
+    return (()=> {
+      window.removeEventListener('beforeunload', saveChanges);
+    })
+  },[callbackForSaveTimeAtQuit])
   
 
   const sendMessage = async (event) => {

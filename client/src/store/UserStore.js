@@ -8,8 +8,8 @@ export default class UserStore {
     this._isAuth = null
     this._isPending = null
     this._user = {} 
-    makeAutoObservable(this)
     this.initiaAuth()
+    makeAutoObservable(this)
   }
 
   setIsAuth (bool) {
@@ -21,21 +21,21 @@ export default class UserStore {
   }
 
   userLogin (data) {
-    this._isAuth = true
     const { email, name, id } = jwt_docode(data.token)
     const {lastReadMessage, avatar} = data
     this._user = { email, name, id, lastReadMessage, avatar }
+    this._isAuth = true
   }
 
   setUser (user) {
     this._user = user
   }
 
-  get currentUser () {   // {...user.currentUSer}
-    return this._user
+  get currentUser () {  
+    return {...this._user}
   }
 
-  get isPending () {   // {...user.currentUSer}
+  get isPending () {
     return this._isPending
   }
 
@@ -57,17 +57,6 @@ export default class UserStore {
         this._isPending = false
       })
     }
-    // checkAuth().then(data=> {
-    //   if (data?.data?.token) {
-    //     this.setIsAuth(true)
-    //     const {email, name, id} = jwt_docode(data.data.token)
-    //     const lastReadMessage = data.data.lastReadMessage
-    //     const avatar = data.data.avatar
-    //     this.setUser({email, name, id, lastReadMessage, avatar})
-    //   } else {
-    //     this.setIsAuth(false)
-    //   }
-    // })
   }
 
 } 

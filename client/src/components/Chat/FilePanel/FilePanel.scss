@@ -42,7 +42,7 @@
           height: 70px;
           width: 70px;
           align-self: center;
-          background-image: url('./File.svg');
+          background-image: url(../../../assets/icons/filePantel_file.svg);
         }
 
         .text {
@@ -71,7 +71,7 @@
 
           &::before {
             height: 100%;
-            content: url('./Circle.svg');
+            content: url(../../../assets/icons/filePantel_circle.svg);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -85,7 +85,6 @@
           text-align: center;
           color: #F9FBFB;
           margin-top: 5px;
-
         }
 
         input {
