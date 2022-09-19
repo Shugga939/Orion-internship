@@ -17,7 +17,6 @@ const findRoomsIndex = (roomsList, roomId)=> {
 const ChatBoard = observer(({
     roomId, 
     callbackForSaveTime, 
-    callbackForSaveTimeAtQuit,
     messages,
     roomsList,
     socket,
@@ -33,18 +32,6 @@ const ChatBoard = observer(({
 
 
   },[roomId, ])
-
-
-  useEffect(()=> {
-    async function saveChanges () {
-      await callbackForSaveTimeAtQuit()
-    } 
-    window.addEventListener('beforeunload', saveChanges);
-
-    return (()=> {
-      window.removeEventListener('beforeunload', saveChanges);
-    })
-  },[callbackForSaveTimeAtQuit])
   
 
   const sendMessage = async (event) => {

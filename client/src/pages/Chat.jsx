@@ -61,24 +61,6 @@ const Chat = observer(() => {
   //   }
   // }
 
-  const getAllowedRoomsWhithLastMessage = useCallback(
-    async ()=> {
-      setLoadingContacts(true)
-      let resp = await fetch(`http://localhost:5000/chat/`, {
-        headers: {
-          lastMessages: true
-        }
-      })
-      if (resp.ok) {
-        const respJson = await resp.json()
-        setRoomsList(respJson)
-      } else {
-        console.log(resp.status)
-      }
-      setLoadingContacts(false)
-    }, []
-  )
-
   // async function getAllowedRoomsWhitLastMessage() {
   //   setLoadingContacts(true)
   //   let resp = await fetch(`http://localhost:5000/chat/`, {
@@ -137,7 +119,7 @@ const Chat = observer(() => {
   // }
 
   const saveTimeOfLastReadingMessageAtQuit = useCallback(
-    async () => {
+    async ()=> {
       const time = Date.now()
       const resp = await fetch(`http://localhost:5000/user/change`, {
         method: 'PUT',
@@ -149,24 +131,12 @@ const Chat = observer(() => {
       } else {
         console.log(resp.status)
       }
-    }, []
-  );
-  //  async function saveTimeOfLastReadingMessageAtQuit() {
-  //   let time = Date.now()
-  //   let resp = await fetch(`http://localhost:5000/user/change`, {
-  //     method: 'PUT',
-  //     headers: {'Content-Type': 'application/json', 'update': 'readMessage'},
-  //     body: JSON.stringify({time, roomId: previousId.current})
-  //   })
-  //   if (resp.ok) {
-  //     await resp.json()  //{message: 'success'}
-  //   } else {
-  //     console.log(resp.status)
-  //   }
-  // }
+    },[]
+  )
+  
 
   useEffect(() => {
-    getAllowedRoomsWhithLastMessage()
+
     socket.current = new WebSocket(`ws://localhost:5000/chat/`)
 
     socket.current.onclose = () => {
@@ -176,6 +146,7 @@ const Chat = observer(() => {
     socket.current.onopen = () => {
       console.log('Websocket is open')
     }
+
   }, [])
 
 
@@ -195,8 +166,12 @@ const Chat = observer(() => {
         await getMembersOfRoom()
         await getMessagesOfRooom()
       })()
+      window.addEventListener('beforeunload', saveTimeOfLastReadingMessageAtQuit);
+      return (()=> {
+        window.removeEventListener('beforeunload', saveTimeOfLastReadingMessageAtQuit);
+      })
     }
-  }, [roomId])
+  }, [roomId, saveTimeOfLastReadingMessageAtQuit])
 
   return (
     <div className='chatPage'>
@@ -207,7 +182,6 @@ const Chat = observer(() => {
           roomId={roomId}
           userId={{ ...user.currentUser }.id}
           callbackForSaveTime={saveTimeOfLastReadingMessage}
-          callbackForSaveTimeAtQuit={saveTimeOfLastReadingMessageAtQuit}
           previous={previousId.current}
           roomsList={roomsList}
           loading={loadingMessages}

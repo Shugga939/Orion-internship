@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { useMemoRooms } from "../../hooks/useMemoRooms";
 import ContactLink from "../ContactLink/ContactLink";
 import ProfileModal from './../ProfileModal/ProfileModal'
@@ -15,7 +15,7 @@ const ContactList = observer(({
 	roomsList, 
 	setRoomsList,
 	callbackForSaveTimeAtQuit,
-	loading
+	
 }) => {
 
 	const {user} = useContext(Context)
@@ -24,13 +24,44 @@ const ContactList = observer(({
 	let [serachActive, setSerachActive] = useState(false)
 	let [searchValue, setSearchValue] = useState('')
 	let [showProfile, setShowProfile] = useState(false)
+	const [loadingContacts, setLoadingContacts] = useState(false)
 	const serachInputRef = useRef(null)
 	let arrayOfRooms = useMemoRooms(roomsList,searchValue)
+	console.log(roomsList);
+
+  const getAllowedRoomsWhithLastMessage = useCallback (
+		async ()=> {
+			setLoadingContacts(true)
+      let resp = await fetch(`http://localhost:5000/chat/`, {
+        headers: {
+          lastMessages: true
+        }
+      })
+      if (resp.ok) {
+        const respJson = await resp.json()
+        setRoomsList(respJson)
+      } else {
+        console.log(resp.status)
+      }
+      setLoadingContacts(false)
+		},[setRoomsList]
+	) 
+	
+      
+
 
 	useEffect (()=> {
 		if (serachActive) serachInputRef.current.focus()
 	},[serachActive])
 	
+
+	useEffect(()=> {
+		try {
+			getAllowedRoomsWhithLastMessage()
+		} catch (e) {
+			console.log(e);
+		}
+	},[getAllowedRoomsWhithLastMessage])
 
 	const openProfile = () => {
 		setShowProfile(true)
@@ -79,7 +110,7 @@ const ContactList = observer(({
 				setShow={setShowProfile}
 				callbackForSaveTimeAtQuit = {callbackForSaveTimeAtQuit}
 			/>
-			{!loading? 
+			{!loadingContacts? 
 				<div className="profile">
 					<div className="avatar">
 						<img src={process.env.REACT_APP_API_URL + {...user.currentUser}.avatar} alt='Photo'></img>
@@ -92,7 +123,7 @@ const ContactList = observer(({
 					<LoaderCircle/>
 				</div>
 			}
-			{!loading? 
+			{!loadingContacts? 
 				<div className="contactList">
 					{arrayOfRooms.map(room=> 
 						<ContactLink
