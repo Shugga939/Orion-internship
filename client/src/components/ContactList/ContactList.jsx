@@ -27,7 +27,6 @@ const ContactList = observer(({
 	const [loadingContacts, setLoadingContacts] = useState(false)
 	const serachInputRef = useRef(null)
 	let arrayOfRooms = useMemoRooms(roomsList,searchValue)
-	console.log(roomsList);
 
   const getAllowedRoomsWhithLastMessage = useCallback (
 		async ()=> {

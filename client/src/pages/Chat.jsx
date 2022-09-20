@@ -10,13 +10,12 @@ import { Context } from "..";
 import { getMembers, getMessages } from '../http/chatAPI';
 
 const Chat = observer(() => {
-  const { user } = useContext(Context)
-  const { members } = useContext(Context)
+  const { user, members, messages } = useContext(Context)
   const { id: roomId } = useParams()
 
   const socket = useRef()
   const previousId = useRef(null)
-  const [messages, setMessages] = useState([]);        // Все сообщения в комнате
+  // const [messages, setMessages] = useState([]);        // Все сообщения в комнате
   const [roomsList, setRoomsList] = useState([]);      // {id, image, name} - rooms , {lastMesasge} - последнее сообщение в комнате
   const [lastMessage, setLastMessage] = useState({});  // Для обновления сообщений в ContactList
   const [loadingContacts, setLoadingContacts] = useState(false)
@@ -28,7 +27,8 @@ const Chat = observer(() => {
     setLoadingMessages(true)
     try {
       const {data} = await getMessages(roomId)
-      setMessages(data)
+      // setMessages(data)
+      messages.initMessages(data)
     } catch (e) {
       console.log(e)
     } finally {
@@ -50,89 +50,7 @@ const Chat = observer(() => {
       }
     },[roomId, members]
   )
-  // async function getUsersOfRoom() {    /// todo hhtp
-  //   let resp = await fetch(`http://localhost:5000/chat/${roomId}/getUsers`)
-  //   if (resp.ok) {
-  //     const users = await resp.json()
-  //     members.setNewMembers(users)
-  //     members.setMembersCount(roomId, users)
-  //   } else {
-  //     console.log(resp.status)
-  //   }
-  // }
 
-  // async function getAllowedRoomsWhitLastMessage() {
-  //   setLoadingContacts(true)
-  //   let resp = await fetch(`http://localhost:5000/chat/`, {
-  //     headers: {
-  //       lastMessages: true
-  //     }
-  //   })
-  //   if (resp.ok) {
-  //     const respJson = await resp.json()
-  //     setRoomsList(respJson)
-  //   } else {
-  //     console.log(resp.status)
-  //   }
-  //   setLoadingContacts(false)
-  // }
-
-  const saveTimeOfLastReadingMessage = useCallback(
-    async () => {
-      let time = Date.now()
-      messages[0] ? time = messages[0].time : time = Date.now()
-      if (previousId.current == null || previousId.current == undefined) {
-        previousId.current = roomId
-      } else {
-        let resp = await fetch(`http://localhost:5000/user/change`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json', 'update': 'readMessage' },
-          body: JSON.stringify({ time, roomId: previousId.current })
-        })
-        if (resp.ok) {
-          await resp.json()  //{message: 'success'}
-        } else {
-          console.log(resp.status)
-        }
-      }
-    }, []
-  )
-  // async function saveTimeOfLastReadingMessage(messages) {
-  //   let time = Date.now()
-  //   messages[0] ? time = messages[0].time : time = Date.now()
-  //   if (previousId.current == null || previousId.current == undefined) {
-  //     previousId.current = roomId
-  //   } else {
-  //     console.log(previousId.current + 'boadrd');
-
-  //     let resp = await fetch(`http://localhost:5000/user/change`, {
-  //       method: 'PUT',
-  //       headers: { 'Content-Type': 'application/json', 'update': 'readMessage' },
-  //       body: JSON.stringify({ time, roomId: previousId.current })
-  //     })
-  //     if (resp.ok) {
-  //       await resp.json()  //{message: 'success'}
-  //     } else {
-  //       console.log(resp.status)
-  //     }
-  //   }
-  // }
-
-  const saveTimeOfLastReadingMessageAtQuit = useCallback(
-    async ()=> {
-      const time = Date.now()
-      const resp = await fetch(`http://localhost:5000/user/change`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'update': 'readMessage' },
-        body: JSON.stringify({ time, roomId: previousId.current })
-      })
-      if (resp.ok) {
-        await resp.json()  //{message: 'success'}
-      } else {
-        console.log(resp.status)
-      }
-    },[]
-  )
   
 
   useEffect(() => {
@@ -159,30 +77,27 @@ const Chat = observer(() => {
         setLastMessage(message)
         if (message.roomId === roomId) {
           console.log('Enter')
-          setMessages(prev => [message, ...prev])
+          // setMessages(prev => [message, ...prev])
+          messages.pushMessage(message)
         }
       }
       (async () => {
         await getMembersOfRoom()
         await getMessagesOfRooom()
       })()
-      window.addEventListener('beforeunload', saveTimeOfLastReadingMessageAtQuit);
-      return (()=> {
-        window.removeEventListener('beforeunload', saveTimeOfLastReadingMessageAtQuit);
-      })
+
     }
-  }, [roomId, saveTimeOfLastReadingMessageAtQuit])
+  }, [roomId, ])
 
   return (
     <div className='chatPage'>
       {roomId ?
         <ChatBoard
           socket={socket.current}
-          messages={messages}
+          // messages={messages}
           roomId={roomId}
           userId={{ ...user.currentUser }.id}
-          callbackForSaveTime={saveTimeOfLastReadingMessage}
-          previous={previousId.current}
+          // callbackForSaveTime={saveTimeOfLastReadingMessage}
           roomsList={roomsList}
           loading={loadingMessages}
         />
@@ -194,7 +109,6 @@ const Chat = observer(() => {
         lastSentMessage={lastMessage}
         roomsList={roomsList}
         setRoomsList={setRoomsList}
-        callbackForSaveTimeAtQuit={saveTimeOfLastReadingMessageAtQuit}
         loading={loadingContacts}
       />
     </div>
