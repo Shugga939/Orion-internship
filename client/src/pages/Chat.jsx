@@ -17,7 +17,7 @@ const Chat = observer(() => {
   const previousId = useRef(null)
   // const [messages, setMessages] = useState([]);        // Все сообщения в комнате
   const [roomsList, setRoomsList] = useState([]);      // {id, image, name} - rooms , {lastMesasge} - последнее сообщение в комнате
-  const [lastMessage, setLastMessage] = useState({});  // Для обновления сообщений в ContactList
+  // const [lastMessage, setLastMessage] = useState({});  // Для обновления сообщений в ContactList
   const [loadingContacts, setLoadingContacts] = useState(false)
   const [loadingMessages, setLoadingMessages] = useState(false)
   const [loadingMembers, setLoadingMembers] = useState(false)
@@ -29,6 +29,7 @@ const Chat = observer(() => {
       const {data} = await getMessages(roomId)
       // setMessages(data)
       messages.initMessages(data)
+      console.log(messages);
     } catch (e) {
       console.log(e)
     } finally {
@@ -74,7 +75,7 @@ const Chat = observer(() => {
 
       socket.current.onmessage = (event) => {
         const message = JSON.parse(event.data)
-        setLastMessage(message)
+        // setLastMessage(message)
         if (message.roomId === roomId) {
           console.log('Enter')
           // setMessages(prev => [message, ...prev])
@@ -106,7 +107,7 @@ const Chat = observer(() => {
       }
       <ContactList
         roomId={roomId}
-        lastSentMessage={lastMessage}
+        // lastSentMessage={lastMessage}
         roomsList={roomsList}
         setRoomsList={setRoomsList}
         loading={loadingContacts}

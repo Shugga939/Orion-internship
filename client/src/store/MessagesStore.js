@@ -18,7 +18,7 @@ export default class MessagesStore {
   }
 
   pushMessage (message) {
-    this._messages.push(message)
+    this._messages.unshift(message)
   }
 
   get lastMessage () {

@@ -11,7 +11,7 @@ import LoaderCircle from "../ui/Loader/LoaderCircle";
 
 const ContactList = observer(({
 	roomId, 
-	lastSentMessage, 
+	// lastSentMessage, 
 	roomsList, 
 	setRoomsList,
 	callbackForSaveTimeAtQuit,
@@ -134,11 +134,11 @@ const ContactList = observer(({
 							lastMessage={room.messageText}
 							dateOfLastMessage={room.date}
 							sender={room.sender}
-							lastSentMessage={lastSentMessage}
+							// lastSentMessage={lastSentMessage}
 							currentUserId={{...user.currentUser}.userId}
 							dateOfLastReadMessage ={datesOfLastReadMessages[room.id]}
 						/>
-					)} 
+					)}
 				</div>
 			:
 				<div className="contactList">

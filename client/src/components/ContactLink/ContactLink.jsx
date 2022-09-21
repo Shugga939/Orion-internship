@@ -2,9 +2,12 @@ import './ContactLink.scss'
 import {Link, NavLink} from 'react-router-dom'
 import { useEffect, useState } from 'react/cjs/react.development'
 import formatteDate from '../../utils/helpers/formatteDates'
+import { observer } from 'mobx-react-lite'
+import { Context } from '../..'
+import { useContext } from 'react'
 
 
-const ChatLink = ({
+const ChatLink = observer (({
   id,
   currentId, 
   name,
@@ -12,14 +15,16 @@ const ChatLink = ({
   lastMessage, 
   dateOfLastMessage, 
   sender, 
-  lastSentMessage,
+  // lastSentMessage,
   currentUserId,
   dateOfLastReadMessage
   }) => {
-  let [unreadMessages, setUnreadMessages] = useState(0)
-  let [textLastMessage, setTextLastMessage] = useState(lastMessage)
-  let [senderLastMessage, setSenderLastMessage] = useState(sender)
-  let [dateLastMessage, setDateLastMessage] = useState(dateOfLastMessage)
+  const [unreadMessages, setUnreadMessages] = useState(0)
+  const [textLastMessage, setTextLastMessage] = useState(lastMessage)
+  const [senderLastMessage, setSenderLastMessage] = useState(sender)
+  const [dateLastMessage, setDateLastMessage] = useState(dateOfLastMessage)
+  const { messages } = useContext(Context)
+  const lastSendMessage = messages.lastMessage
 
   useEffect (()=> {
 		async function getUnreadMessages () {    /// todo remove in helper
@@ -44,19 +49,19 @@ const ChatLink = ({
   },[currentId])
 
   useEffect(()=> {
-    console.log('new mess')
-    if (lastSentMessage.roomId === id &&
-        lastSentMessage.roomId !== currentId &&
-        lastSentMessage.userId !== currentUserId
+
+    if (lastSendMessage.roomId === id &&
+      lastSendMessage.roomId !== currentId &&
+      lastSendMessage.userId !== currentUserId
       ) {
         setUnreadMessages(++unreadMessages)
       }
-      if (lastSentMessage.message && lastSentMessage.roomId === id) {
-      setTextLastMessage(lastSentMessage.message)
-      setSenderLastMessage(lastSentMessage.username)
-      setDateLastMessage(formatteDate(new Date(lastSentMessage.time)))
+      if (lastSendMessage.message && lastSendMessage.roomId === id) {
+      setTextLastMessage(lastSendMessage.message)
+      setSenderLastMessage(lastSendMessage.username)
+      setDateLastMessage(formatteDate(new Date(lastSendMessage.time)))
     }
-  },[lastSentMessage])
+  },[messages.lastMessage])
 
   return ( 
     <NavLink to={`/chat/${id}`} className={`${id===currentId? 'linkContainer active' : 'linkContainer'}`}>
@@ -79,6 +84,6 @@ const ChatLink = ({
       </div>
     </NavLink>
   )
-}
+})
 
 export default ChatLink;
