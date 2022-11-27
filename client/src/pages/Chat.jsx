@@ -29,7 +29,6 @@ const Chat = observer(() => {
       const {data} = await getMessages(roomId)
       // setMessages(data)
       messages.initMessages(data)
-      console.log(messages);
     } catch (e) {
       console.log(e)
     } finally {
