@@ -5,11 +5,13 @@ import { useContext, useEffect, useState } from 'react/cjs/react.development'
 import { observer } from 'mobx-react-lite'
 import { Context } from '../..'
 import { userLogout } from '../../http/userAPI'
+import { useParams } from 'react-router-dom'
+import { saveTimeOfLastReadingMessage } from '../../http/chatAPI'
 
 
-const ProfileModal = observer(({show, setShow, callbackForSaveTimeAtQuit}) => {
-  let {user} = useContext(Context)
-
+const ProfileModal = observer(({show, setShow}) => {
+  let {user, messages} = useContext(Context)
+  const { id: roomId } = useParams()
   let nameRef = useRef('')
   let fileRef = useRef(null)
   let [avatar, setAvatar] = useState(process.env.REACT_APP_API_URL + {...user.currentUser}.avatar)
@@ -79,10 +81,14 @@ const ProfileModal = observer(({show, setShow, callbackForSaveTimeAtQuit}) => {
   }
 
   const logout = async ()=> {
-    await callbackForSaveTimeAtQuit()
-    let data = await userLogout()
-    user.setIsAuth(false)
-    user.setUser({})
+    try {
+      // if (roomId)  await saveTimeOfLastReadingMessage(new Date(messages.allMessages[0].time), roomId);
+      await userLogout()
+      user.setIsAuth(false)
+      user.setUser({})
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   const closeModalMessage = ()=> {

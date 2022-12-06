@@ -28,7 +28,7 @@ async function getAllowedRoomsWithLastMessages() {
 class chatController {
 
   // return Unreading Messages
-  async getMessages (req, res) { 
+  async getMessages (req, res) {         
     let {id} = req.params
     let roomId = req.headers.roomid
     if (id == 'getUsers') return
@@ -68,14 +68,15 @@ class chatController {
   
 // return allowed Rooms With Last Messages for roomList
   async getRooms (req, res) {    
-    if (req.headers.lastmessages) {
+    // if (req.headers.lastmessages) {
     let rooms = await getAllowedRoomsWithLastMessages()
     return res.json(rooms)
 
-    } else {
-      const allRooms = await Room.find()
-      return res.json(allRooms)
-    }
+    // } else {
+    //   const allRooms = await Room.find()      // todo отдельный роут chatRouter.get('/rooms')
+
+    //   return res.json(allRooms)
+    // }
   }
 
   // create new room

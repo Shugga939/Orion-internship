@@ -14,8 +14,6 @@ const ContactList = observer(({
 	// lastSentMessage, 
 	roomsList, 
 	setRoomsList,
-	callbackForSaveTimeAtQuit,
-	
 }) => {
 
 	const {user} = useContext(Context)
@@ -107,7 +105,6 @@ const ContactList = observer(({
 			<ProfileModal 
 				show={showProfile} 
 				setShow={setShowProfile}
-				callbackForSaveTimeAtQuit = {callbackForSaveTimeAtQuit}
 			/>
 			{!loadingContacts? 
 				<div className="profile">

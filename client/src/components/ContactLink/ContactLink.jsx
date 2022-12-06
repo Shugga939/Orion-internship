@@ -33,7 +33,6 @@ const ChatLink = observer (({
       }) 
 			if (resp.ok) {
         const count = await resp.json()
-        console.log(count);
         setUnreadMessages(count.countUnreadingMessages)
 			} else {
 				console.log(resp.status)
@@ -50,18 +49,19 @@ const ChatLink = observer (({
   },[currentId])
 
   useEffect(()=> {
-    if (lastSendMessage.roomId === id &&             // lastSendMessage.roomId ==> lastSendMessage
-      lastSendMessage.roomId !== currentId &&
-      lastSendMessage.userId !== currentUserId
-      ) {
-        setUnreadMessages(++unreadMessages)
+    if (lastSendMessage && lastSendMessage.roomId === id &&             // lastSendMessage.roomId ==> lastSendMessage
+    lastSendMessage.roomId !== currentId &&
+    lastSendMessage.userId !== currentUserId
+    ) {
+        console.log(lastSendMessage);
+        setUnreadMessages(unreadMessages+1) 
       }
-      if (lastSendMessage.message && lastSendMessage.roomId === id) {
+      if (lastSendMessage && lastSendMessage.message && lastSendMessage.roomId === id) {
       setTextLastMessage(lastSendMessage.message)
       setSenderLastMessage(lastSendMessage.username)
       setDateLastMessage(formatteDate(new Date(lastSendMessage.time)))
     }
-  },[lastMessage])
+  },[lastSendMessage])
 
   return ( 
     <NavLink to={`/chat/${id}`} className={`${id===currentId? 'linkContainer active' : 'linkContainer'}`}>
