@@ -23,18 +23,33 @@ const Chat = observer(() => {
   const [loadingMembers, setLoadingMembers] = useState(false)
 
 
-  async function getMessagesOfRooom() {  
-    setLoadingMessages(true)
-    try {
-      const {data} = await getMessages(roomId)
-      // setMessages(data)
-      messages.initMessages(data)
-    } catch (e) {
-      console.log(e)
-    } finally {
-      setLoadingMessages(false)
-    }
-  }
+  const getMessagesOfRooom = useCallback(
+    async ()=> {
+      try {
+        const {data} = await getMessages(roomId)
+        // setMessages(data)
+        messages.initMessages(data)
+      } catch (e) {
+        console.log(e)
+      } finally {
+        setLoadingMessages(false)
+      }
+    }, [roomId, messages] 
+  )
+
+  // async function getMessagesOfRooom() {
+  //   setLoadingMessages(true)
+  //   try {
+  //     console.log('asd');
+  //     const {data} = await getMessages(roomId)
+  //     // setMessages(data)
+  //     messages.initMessages(data)
+  //   } catch (e) {
+  //     console.log(e)
+  //   } finally {
+  //     setLoadingMessages(false)
+  //   }
+  // }
 
   const getMembersOfRoom = useCallback (
     async ()=> {
@@ -70,24 +85,24 @@ const Chat = observer(() => {
 
   useEffect(() => {
     previousId.current = roomId
+    // messages.initMessages([])
     if (roomId != null && roomId !== 'main' && roomId !== undefined) {
-
+      laodData()
       socket.current.onmessage = (event) => {
         const message = JSON.parse(event.data)
         // setLastMessage(message)
         if (message.roomId === roomId) {
-          console.log('Enter')
           // setMessages(prev => [message, ...prev])
           messages.pushMessage(message)
         }
       }
-      (async () => {
-        await getMembersOfRoom()
-        await getMessagesOfRooom()
-      })()
-
     }
-  }, [roomId, ])
+
+    async function laodData() {
+      await getMembersOfRoom()
+      await getMessagesOfRooom()
+    }
+  }, [roomId, getMessagesOfRooom, getMembersOfRoom, messages])
 
   return (
     <div className='chatPage'>
@@ -97,7 +112,6 @@ const Chat = observer(() => {
           // messages={messages}
           roomId={roomId}
           userId={{ ...user.currentUser }.id}
-          // callbackForSaveTime={saveTimeOfLastReadingMessage}
           roomsList={roomsList}
           loading={loadingMessages}
         />
@@ -110,6 +124,7 @@ const Chat = observer(() => {
         roomsList={roomsList}
         setRoomsList={setRoomsList}
         loading={loadingContacts}
+        socket={socket.current}
       />
     </div>
   );

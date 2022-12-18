@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom'
 import { saveTimeOfLastReadingMessage } from '../../http/chatAPI'
 
 
-const ProfileModal = observer(({show, setShow}) => {
+const ProfileModal = observer(({show, setShow, socket}) => {
   let {user, messages} = useContext(Context)
   const { id: roomId } = useParams()
   let nameRef = useRef('')
@@ -84,8 +84,10 @@ const ProfileModal = observer(({show, setShow}) => {
     try {
       // if (roomId)  await saveTimeOfLastReadingMessage(new Date(messages.allMessages[0].time), roomId);
       await userLogout()
+      socket.close()
       user.setIsAuth(false)
       user.setUser({})
+      messages.initMessages([])
     } catch (e) {
       console.log(e);
     }

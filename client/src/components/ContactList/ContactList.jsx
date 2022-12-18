@@ -14,6 +14,7 @@ const ContactList = observer(({
 	// lastSentMessage, 
 	roomsList, 
 	setRoomsList,
+	socket
 }) => {
 
 	const {user} = useContext(Context)
@@ -105,6 +106,7 @@ const ContactList = observer(({
 			<ProfileModal 
 				show={showProfile} 
 				setShow={setShowProfile}
+				socket={socket}
 			/>
 			{!loadingContacts? 
 				<div className="profile">
