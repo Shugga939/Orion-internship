@@ -37,20 +37,6 @@ const Chat = observer(() => {
     }, [roomId, messages] 
   )
 
-  // async function getMessagesOfRooom() {
-  //   setLoadingMessages(true)
-  //   try {
-  //     console.log('asd');
-  //     const {data} = await getMessages(roomId)
-  //     // setMessages(data)
-  //     messages.initMessages(data)
-  //   } catch (e) {
-  //     console.log(e)
-  //   } finally {
-  //     setLoadingMessages(false)
-  //   }
-  // }
-
   const getMembersOfRoom = useCallback (
     async ()=> {
       setLoadingMembers(true)
@@ -66,20 +52,10 @@ const Chat = observer(() => {
     },[roomId, members]
   )
 
-  
-
   useEffect(() => {
-
     socket.current = new WebSocket(`ws://localhost:5000/chat/`)
-
-    socket.current.onclose = () => {
-      console.log('Websocket is close')
-    }
-
-    socket.current.onopen = () => {
-      console.log('Websocket is open')
-    }
-
+    socket.current.onclose = () => console.log('Websocket is close')
+    socket.current.onopen = () => console.log('Websocket is open')
   }, [])
 
 
