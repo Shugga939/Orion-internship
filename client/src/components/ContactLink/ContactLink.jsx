@@ -54,7 +54,7 @@ const ChatLink = observer (({
     lastSendMessage.userId !== currentUserId
     ) {
         console.log(lastSendMessage);
-        setUnreadMessages(unreadMessages+1) 
+        setUnreadMessages((unreadMessages)=> unreadMessages + 1) 
       }
       if (lastSendMessage && lastSendMessage.message && lastSendMessage.roomId === id) {
       setTextLastMessage(lastSendMessage.message)

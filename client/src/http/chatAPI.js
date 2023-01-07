@@ -10,6 +10,14 @@ export const getMembers = async (roomId)=> {
   return response
 }
 
+export const getRooms = async ()=> {
+  const config = {
+    headers : { 'lastMessages': true },
+  }
+  const response = await $host.get(`chat`, config)
+  return response
+}
+
 export const saveTimeOfLastReadingMessage = async (time, roomId)=> {
   const resp = await fetch(`http://localhost:5000/user/change`, {
     method: 'PUT',

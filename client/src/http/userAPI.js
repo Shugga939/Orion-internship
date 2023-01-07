@@ -23,3 +23,12 @@ export const checkAuth = async ()=> {
     console.log(e)
   }
 }
+
+export const saveTime = async (time, roomId)=> {
+  const config = {
+    headers : { 'Content-Type': 'application/json', 'update': 'readMessage' },
+  }
+  const data = JSON.stringify({ time, roomId })
+  const response = await $host.put('user/change', data, config)
+  return response
+}

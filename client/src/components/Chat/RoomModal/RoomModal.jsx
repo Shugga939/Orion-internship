@@ -25,7 +25,7 @@ const RoomModal = observer(({
   const startName = roomsName 
 
   useEffect(()=>{
-    nameRef.current.value = roomsName 
+    nameRef.current.value = roomsName
     setAvatar(startAvatar)
     setError({avatar:'', name:''})
     setLinkForInvite(`${process.env.REACT_APP_API_URL}user/invite/${currentRoomId}`)

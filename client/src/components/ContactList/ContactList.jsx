@@ -1,52 +1,47 @@
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useRef, useContext, useEffect, useState  } from "react";
 import { useMemoRooms } from "../../hooks/useMemoRooms";
 import ContactLink from "../ContactLink/ContactLink";
 import ProfileModal from './../ProfileModal/ProfileModal'
 import './ContactList.scss'
-import { useContext, useEffect, useState } from "react/cjs/react.development";
 import CreateChatRoom from "../CreateChatRoom/CreateChatRoom";
 import { observer } from "mobx-react-lite";
 import { Context } from "../..";
 import LoaderCircle from "../ui/Loader/LoaderCircle";
+import { getRooms } from "../../http/chatAPI";
 
 const ContactList = observer(({
 	roomId, 
 	// lastSentMessage, 
-	roomsList, 
-	setRoomsList,
+	// roomsList, 
+	// setRoomsList,
 	socket
 }) => {
 
-	const {user} = useContext(Context)
-	let datesOfLastReadMessages = {...user.currentUser}.lastReadMessage
-	let [groupChat, setGroupChat] = useState(true)
-	let [serachActive, setSerachActive] = useState(false)
-	let [searchValue, setSearchValue] = useState('')
-	let [showProfile, setShowProfile] = useState(false)
+	const {user, rooms} = useContext(Context)
+	const datesOfLastReadMessages = {...user.currentUser}.lastReadMessage
+	const [groupChat, setGroupChat] = useState(true)
+	const [serachActive, setSerachActive] = useState(false)
+	const [searchValue, setSearchValue] = useState('')
+	const [showProfile, setShowProfile] = useState(false)
 	const [loadingContacts, setLoadingContacts] = useState(false)
 	const serachInputRef = useRef(null)
-	let arrayOfRooms = useMemoRooms(roomsList,searchValue)
+	const arrayOfRooms = useMemoRooms(rooms.roomsList, searchValue)
+
 
   const getAllowedRoomsWhithLastMessage = useCallback (
 		async ()=> {
 			setLoadingContacts(true)
-      let resp = await fetch(`http://localhost:5000/chat/`, {
-        headers: {
-          lastMessages: true
-        }
-      })
-      if (resp.ok) {
-        const respJson = await resp.json()
-        setRoomsList(respJson)
-      } else {
-        console.log(resp.status)
-      }
-      setLoadingContacts(false)
-		},[setRoomsList]
+      try {
+				const {data} = await getRooms()
+        // setRoomsList(data)
+				rooms.initRoomsList(data)
+      } catch (e) {
+        console.log(e.status)
+      } finally {
+				setLoadingContacts(false)
+			}
+		},[]
 	) 
-	
-      
-
 
 	useEffect (()=> {
 		if (serachActive) serachInputRef.current.focus()
@@ -54,11 +49,7 @@ const ContactList = observer(({
 	
 
 	useEffect(()=> {
-		try {
 			getAllowedRoomsWhithLastMessage()
-		} catch (e) {
-			console.log(e);
-		}
 	},[getAllowedRoomsWhithLastMessage])
 
 	const openProfile = () => {
@@ -144,7 +135,7 @@ const ContactList = observer(({
 					<LoaderCircle/>
 				</div>
 			}
-			<CreateChatRoom setRoomsList={setRoomsList}/>
+			{/* <CreateChatRoom setRoomsList={setRoomsList}/> */}
 			<div className="lowerToolBar">
 				<div className="buttons-icons">
 					<button className={renderButtons('groupChat')} onClick={switchGroup}/>

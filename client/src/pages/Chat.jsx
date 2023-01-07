@@ -2,12 +2,15 @@ import './Pages.scss'
 import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useContext, useRef } from "react";
+
 import ChatBoard from "../components/Chat/ChatBoard/ChatBoard";
 import MainChatBoard from "../components/Chat/MainChatBoard/MainChatBoard";
 import ContactList from "../components/ContactList/ContactList";
+
 import { observer } from "mobx-react-lite";
 import { Context } from "..";
 import { getMembers, getMessages } from '../http/chatAPI';
+
 
 const Chat = observer(() => {
   const { user, members, messages } = useContext(Context)
@@ -15,16 +18,11 @@ const Chat = observer(() => {
 
   const socket = useRef()
   const previousId = useRef(null)
-  // const [messages, setMessages] = useState([]);        // Все сообщения в комнате
-  const [roomsList, setRoomsList] = useState([]);      // {id, image, name} - rooms , {lastMesasge} - последнее сообщение в комнате
-  // const [lastMessage, setLastMessage] = useState({});  // Для обновления сообщений в ContactList
-  const [loadingContacts, setLoadingContacts] = useState(false)
   const [loadingMessages, setLoadingMessages] = useState(false)
-  const [loadingMembers, setLoadingMembers] = useState(false)
-
 
   const getMessagesOfRooom = useCallback(
     async ()=> {
+      setLoadingMessages(true)
       try {
         const {data} = await getMessages(roomId)
         // setMessages(data)
@@ -39,15 +37,12 @@ const Chat = observer(() => {
 
   const getMembersOfRoom = useCallback (
     async ()=> {
-      setLoadingMembers(true)
       try {
         const {data} = await getMembers(roomId)   
         members.setNewMembers(data)
         members.setMembersCount(roomId, data)
       } catch (e) {
         console.log(e)
-      } finally {
-        setLoadingMembers(true)
       }
     },[roomId, members]
   )
@@ -85,10 +80,8 @@ const Chat = observer(() => {
       {roomId ?
         <ChatBoard
           socket={socket.current}
-          // messages={messages}
           roomId={roomId}
           userId={{ ...user.currentUser }.id}
-          roomsList={roomsList}
           loading={loadingMessages}
         />
         :
@@ -96,10 +89,6 @@ const Chat = observer(() => {
       }
       <ContactList
         roomId={roomId}
-        // lastSentMessage={lastMessage}
-        roomsList={roomsList}
-        setRoomsList={setRoomsList}
-        loading={loadingContacts}
         socket={socket.current}
       />
     </div>

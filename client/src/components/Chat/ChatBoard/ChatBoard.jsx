@@ -8,73 +8,54 @@ import { observer } from 'mobx-react-lite';
 import { Context } from '../../..';
 import RoomBar from '../RoomBar/RoomBar';
 import LoaderRow from '../../ui/Loader/LoaderRow';
+import { saveTime } from '../../../http/userAPI';
+import MessageArea from '../MessageArea/MessageArea';
 
 
-const findRoomsIndex = (roomsList, roomId)=> {
-  return roomsList.findIndex((room)=> room.id === roomId) 
-}
-
-const ChatBoard = observer(({
-    roomId, 
-    // messages,
-    roomsList,
-    socket,
-    loading
-  }) => {
+const ChatBoard = observer(({ roomId, socket, loading}) => {
   const {user, messages} = useContext(Context)
-  const allMessages = messages.allMessages
+
   const currentUser = user.currentUser
   const inputRef = useRef('')
   const previousId = useRef(null)
 
-
   const saveTimeOfLastReadingMessage = useCallback(
     async () => {
-      let time
-      messages.lastMessage ? time = allMessages[0].time : time = Date.now()
-      // messages[0] ? time = messages[0].time : time = Date.now()
+      const time = messages.lastMessage ? messages.lastMessage.time : Date.now()
+
       if (previousId.current == null || previousId.current === undefined) {
         previousId.current = roomId
       } else {
-        let resp = await fetch(`http://localhost:5000/user/change`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json', 'update': 'readMessage' },
-          body: JSON.stringify({ time, roomId: previousId.current })
-        })
-        if (resp.ok) {
-          await resp.json()  //{message: 'success'}
-        } else {
-          console.log(resp.status)
+        try {
+          saveTime(time, previousId.current)
+        } catch (e) {
+          console.log(e.message);
+        } finally {
+          previousId.current = roomId
         }
       }
-    },[allMessages]
+    },[roomId]
   )
 
   const saveTimeOfLastReadingMessageAtQuit = useCallback(
     async ()=> {
-      const time = Date.now()
-      const resp = await fetch(`http://localhost:5000/user/change`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'update': 'readMessage' },
-        body: JSON.stringify({ time, roomId: previousId.current })
-      })
-      if (resp.ok) {
-        await resp.json()  //{message: 'success'}
-      } else {
-        console.log(resp.status)
+      const time = messages.lastMessage ? messages.lastMessage.time : Date.now()
+      try {
+        saveTime(time, roomId)
+      } catch (e) {
+        console.log(e.message);
       }
-    },[]
+    },[roomId]
   )
-
 
   useEffect(()=> {
     saveTimeOfLastReadingMessage()
     window.addEventListener('beforeunload', saveTimeOfLastReadingMessageAtQuit);
 
-    return (()=> {
+    return(()=> {
       window.removeEventListener('beforeunload', saveTimeOfLastReadingMessageAtQuit);
     })
-  },[roomId, saveTimeOfLastReadingMessage, saveTimeOfLastReadingMessageAtQuit])
+  },[saveTimeOfLastReadingMessage, saveTimeOfLastReadingMessageAtQuit])
   
 
   const sendMessage = async (event) => {
@@ -97,56 +78,14 @@ const ChatBoard = observer(({
     <div className="chatBoard"> 
       <div className='roomBarContainer'>
         <RoomBar 
-          currentRoom={roomsList[findRoomsIndex(roomsList, roomId)]}
           currentRoomId={roomId}
         />
       </div>
-      {!loading? 
+      {!loading?
         <div className="messagesContainer">
-          {allMessages.map((message,index)=>{  // todo use memo
-            const messageDate = new Date(message.time)
-            let nextMessageDate
-            let nextMessageUserId
-            if (index!== allMessages.length-1) {
-              nextMessageDate = new Date(allMessages[index+1].time)
-              nextMessageUserId = allMessages[index+1].userId
-            } else {
-              nextMessageDate = new Date(allMessages[index].time)
-              nextMessageUserId = allMessages[index].userId
-            }
-            const formattedDate = formatteDate(messageDate)
-
-            if (formattedDate===formatteDate(nextMessageDate) && index!==allMessages.length-1) {
-              return <Message 
-              message={message.message}   
-              event={message.event}   
-              key={message.time}
-              date={messageDate}
-              messageOwner={message.userId===currentUser.id}
-              sameSender={message.userId===nextMessageUserId}
-              userId={message.userId}
-              />
-            } else {
-              return (
-                <div className='withDate' key={message.time}>
-                  <div className="dateContainer">
-                    <DateReference date={formattedDate}/>
-                  </div>
-                  <Message 
-                    message={message.message} 
-                    event={message.event}   
-                    date={messageDate}
-                    messageOwner={message.userId===currentUser.id}
-                    sameSender={false}
-                    userId={message.userId}
-                  />
-                </div>
-              )
-            }
-          }
-          )}
+          <MessageArea/>
         </div>
-      :
+        :
         <div className="loaderContainer">
           <LoaderRow/>
         </div>

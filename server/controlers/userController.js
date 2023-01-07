@@ -24,8 +24,8 @@ class userController {
 
   // update information (name, avatar) or last reading messages
   async update (req, res, next) {
-    let changeableField =  req.headers.update
-
+    const changeableField =  req.headers.update
+    
     if (changeableField) {
       switch (changeableField) {
         case 'information' : {
@@ -157,7 +157,7 @@ class userController {
 
   async logout (req, res, next) {
     try {
-      res.cookie('token', {
+      res.cookie('token', '', {
         maxAge: 0,
         path: '/',
         // domain: 'localhost:3000'
