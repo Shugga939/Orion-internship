@@ -20,7 +20,7 @@ export default class MembersStore {
     }
   }
 
-  setNewMembers (membersArr) {
+  addNewMembers (membersArr) {
     membersArr.forEach(mem => {
       if (!this._members[mem._id]) {
         this._members[mem._id] = {avatar: mem.avatar, name: mem.username}

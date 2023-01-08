@@ -8,9 +8,10 @@ import { observer } from "mobx-react-lite";
 import { Context } from "../..";
 import LoaderCircle from "../ui/Loader/LoaderCircle";
 import { getRooms } from "../../http/chatAPI";
+import { useParams } from "react-router-dom";
 
 const ContactList = observer(({
-	roomId, 
+	// roomId, 
 	// lastSentMessage, 
 	// roomsList, 
 	// setRoomsList,
@@ -26,7 +27,7 @@ const ContactList = observer(({
 	const [loadingContacts, setLoadingContacts] = useState(false)
 	const serachInputRef = useRef(null)
 	const arrayOfRooms = useMemoRooms(rooms.roomsList, searchValue)
-
+  const { id: roomId } = useParams()
 
   const getAllowedRoomsWhithLastMessage = useCallback (
 		async ()=> {

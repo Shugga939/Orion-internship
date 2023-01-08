@@ -24,7 +24,7 @@ export const checkAuth = async ()=> {
   }
 }
 
-export const saveTime = async (time, roomId)=> {
+export const saveTime = async (time, roomId)=> { 
   const config = {
     headers : { 'Content-Type': 'application/json', 'update': 'readMessage' },
   }
